@@ -4,6 +4,8 @@ const debug = require('debug')('boxpihal:input-handler');
 const MAX_INPUT_BUFFER = 0x400; // 1024 bytes maximum
 const INPUT_WINDOW_MS  = 500;   // 0.5 sec to finish a stream
 
+const STOP_CHARS = [ 0x40 ];
+
 class bxpInputHandler {
     constructor(bxp, handler) {
         this.hid =  bxp.config.enable_hid === true;
@@ -30,7 +32,32 @@ class bxpInputHandler {
             var HID = require('node-hid');
             var hid_devices = HID.devices();
 
-            // @todo -- find valid devices to link to and set up listeners
+            for (var hi in hid_devices) {
+                var dev_path = hid_devices[hi].path;
+                if (! dev_path) continue;
+
+                var dev;
+                try {
+                    dev = new HID.HID(dev_path);
+                } catch(e) {
+                    // Failed to attach
+                    dev = null;
+                }
+
+                var self = this;
+
+                if (dev) {
+                    dev.on('data', (data) => {
+                        self.onHid(data);
+                    });
+
+                    dev.on('error', (err) => {
+                        self.onHidError(err);
+                    });
+
+                    this._hid_devs.push(dev);
+                }
+            }
         }
 
         if (this.rfid) {
@@ -96,24 +123,43 @@ class bxpInputHandler {
             }
         } else if (ctx.mode == 'scalar') {
             // data received in its entirety
+            this.input_buffer.write(i, 0, i.length, 'ascii');
+            this.bp = i.length;
+
+            this.deliverBuffer().resetBuffer();
         }
     }
 
     storeStreamInput(inp) {
-        if (this.isStopCharacter(inp)) {
+        if (this.isStopCharacter(inp.charCodeAt(0))) {
             this.input_complete = true;
         } else {
             this.input_buffer[this.bp++] = inp;
         }
     }
 
+    isStopCharacter(char_code) {
+        return STOP_CHARS.indexOf(char_code) != -1;
+    }
+
     onHid(buf) {
-        // Evaluate the buffer and pull out
-        var raw  = buf[2];
-        var key1 = buf.toString('ascii', 2, 3);
+        var raw;
+        var key1;
+
+        if (buf instanceof Buffer) {
+            raw  = buf[2];
+            key1 = buf.toString('ascii', 2, 3);
+        } else {
+            raw = (new Buffer(buf))[0];
+            key1 = buf;
+        }
 
         var ctx = { 'src': 'hid', 'mode': 'stream' };
-        if (raw > 0x0) this.onInput(ctx);
+        if (raw > 0x0) this.onInput(key1, ctx);
+    }
+
+    onHidError(err) {
+        debug(error);
     }
 
     onRfid(uid) {

@@ -1,5 +1,5 @@
 var DEFAULTS = {
-    'i2c_device': '/dev/i2c-1',
+    'i2c_bus': '1',
     'spi_device': '/dev/spidev0.0',
     'enable_display': true,
     'enable_hid': true,
