@@ -8,11 +8,13 @@
   },
   "author": "Corey Sharrah <corey@boxtie.io>",
   "dependencies": {
+    "debug": "^2.6.8",
     "i2c-bus": "^1.2.2",
     "node-hid": "^0.5.4",
     "oled-font-5x7": "^1.0.0",
     "oled-i2c-bus": "^1.0.9",
-    "rc522": "^0.1.2"
+    "rc522": "^0.1.2",
+    "simple-get": "^2.6.0"
   },
   "devDependencies": {
     "mocha": "^3.4.2",
