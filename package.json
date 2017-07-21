@@ -1,0 +1,21 @@
+{
+  "name": "boxpi-hal",
+  "version": "0.1.0",
+  "description": "The Hardware Abstraction Layer for all the Boxtie PI hardware",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Corey Sharrah <corey@boxtie.io>",
+  "dependencies": {
+    "i2c-bus": "^1.2.2",
+    "node-hid": "^0.5.4",
+    "oled-font-5x7": "^1.0.0",
+    "oled-i2c-bus": "^1.0.9",
+    "rc522": "^0.1.2"
+  },
+  "devDependencies": {
+    "mocha": "^3.4.2",
+    "simple-assert": "^1.0.0"
+  }
+}
