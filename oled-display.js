@@ -19,7 +19,7 @@ const DEFAULT_FONT    = '5x7';
 const ON  = 1;
 const OFF = 0;
 
-class OledDisplay {
+class bxpOledDisplay {
     constructor(bxp) {
         this.disabled = false;
         this.display_config = {};
@@ -220,4 +220,4 @@ class OledDisplay {
     }
 }
 
-module.exports = OledDisplay;
+module.exports = bxpOledDisplay;

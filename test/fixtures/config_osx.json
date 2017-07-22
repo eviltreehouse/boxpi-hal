@@ -1,0 +1,6 @@
+{
+	"enable_display": false,
+	"enable_hid": false,
+	"enable_rfid": false,
+	"enable_virtual_hid": true
+}
