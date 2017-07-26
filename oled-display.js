@@ -5,6 +5,8 @@ const DISPLAY_TYPES = {
     '128x64': {
         'width': 128,
         'height': 64,
+        'cols': 18,
+        'rows': 8
     }
 };
 
@@ -91,6 +93,20 @@ class bxpOledDisplay {
         if (this.fonts[ DEFAULT_FONT ]) {
             this.fonts['default'] = this.fonts[DEFAULT_FONT];
         }
+    }
+
+    writeText(col, row, text, font_id) {
+		var prev_font;
+
+        if (font_id) {
+			prev_font = this.font;
+			this.setFont(font_id);
+		}
+
+		this.oledSetCursor(col, row, 0, 0);
+		this.oledWriteString(text, 1, 1);
+		
+		if (prev_font) this.setFont(font_id);
     }
 
     oledDrawBitmap(bitmap, update, bitmap_key) {
@@ -201,7 +217,14 @@ class bxpOledDisplay {
 
     getCurrentFont() {
         return this.fonts[this.font];
-    }
+	}
+	
+	setFont(font_id) {
+		if (! font_id) font_id = 'default';
+		this.font = font_id;
+
+		return this;
+	}
 
     getCurrentFontInstance() {
         var f = this.getCurrentFont();
