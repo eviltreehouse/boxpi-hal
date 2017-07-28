@@ -7,36 +7,11 @@ var DEFAULTS = {
     'enable_virtual_hid': false,
     'enable_rfid': true,
     'display_type': '128x64',
-    'display_i2c_address': 0x3D,
-    'api_host_secure': true,
-    'api_host': null,
-    'api_timeout': 0
+    'display_i2c_address': 0x3D
 };
 
 function Config(custom) {
     var config = Object.assign({}, DEFAULTS, custom);
-
-    if (! config.api_host) {
-        defineApiHost(config);
-    }
-
-    return config;
-}
-
-function defineApiHost(config) {
-    // Determine API host parameters via automagic means
-    if (process.env['BOXTIE_API_HOST']) {
-        config.api_host = process.env['BOXTIE_API_HOST'];
-
-        config.api_host_secure = truthy(process.env['BOXTIE_API_HTTPS']);
-    } else {
-        if (config.mode == 'production') {
-            config.api_host = 'api.boxtie.io';
-        } else {
-            config.api_host = 'np-api.boxtie.io';
-            config.api_host_secure = false;
-        }
-    }
 
     return config;
 }
