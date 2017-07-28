@@ -3,7 +3,6 @@ const debug = require('debug')('boxpihal:core');
 
 const bxpInputHandler = require('./input-handler');
 const bxpOledDisplay  = require('./oled-display');
-const bxpApiClient    = require('./api/client');
 
 class BoxpiHAL {
     constructor(opt) {
@@ -16,8 +15,6 @@ class BoxpiHAL {
 
         this.display = null;
 
-        this.api_client = null;
-
         this.init();
 
     }
@@ -25,12 +22,6 @@ class BoxpiHAL {
     init() {
         this.enableInput();
         if (this.config.enable_display) this.enableDisplay();
-
-        this.initApiClient();
-    }
-
-    initApiClient() {
-        this.api_client = new bxpApiClient(this);
     }
 
     inputHandler() {
